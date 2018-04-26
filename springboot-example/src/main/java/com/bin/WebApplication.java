@@ -24,7 +24,7 @@ public class WebApplication extends SpringBootServletInitializer {
 
     @RequestMapping("/")
     Object hello() {
-        return handlerFactory.invoke("ConfigHandler");
+        return handlerFactory.invoke("HelloHandler");
     }
 
     public static void main(String[] args) {
