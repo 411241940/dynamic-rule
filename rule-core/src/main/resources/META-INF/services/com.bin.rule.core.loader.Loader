@@ -1,0 +1,3 @@
+com.bin.rule.core.loader.impl.DBLoader
+com.bin.rule.core.loader.impl.FileLoader
+com.bin.rule.core.loader.impl.RedisLoader

@@ -1,6 +1,6 @@
 package com.bin.config;
 
-import com.bin.rule.core.HandlerFactory;
+import com.bin.rule.core.bootstrap.RuleBootstrap;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,7 +13,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class Config {
     @Bean
-    public HandlerFactory handlerFactory() {
-        return new HandlerFactory();
+    public RuleBootstrap ruleBootstrap() {
+        RuleBootstrap ruleBootstrap = new RuleBootstrap();
+        ruleBootstrap.setLoaderSupport("file");
+        return ruleBootstrap;
     }
 }

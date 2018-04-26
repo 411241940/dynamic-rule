@@ -3,19 +3,21 @@ package com.bin.rule.core.loader.impl
 import com.bin.rule.core.loader.Loader
 
 /**
- * 数据库代码加载器
+ * redis代码加载器
  *
  * @author bin
  * @version 1.0 2018/4/25
  * */
-class DBLoader implements Loader {
+class RedisLoader implements Loader {
+
+    @Override
     String load(String name) {
-        // 查询数据库中的代码段
+        // 查询redis中的代码段
         return null
     }
 
     @Override
     String getName() {
-        return LOADER_NAME.db
+        return LOADER_NAME.redis
     }
 }

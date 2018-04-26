@@ -27,4 +27,9 @@ class FileLoader implements Loader {
         }
         return code
     }
+
+    @Override
+    String getName() {
+        return LOADER_NAME.file
+    }
 }
