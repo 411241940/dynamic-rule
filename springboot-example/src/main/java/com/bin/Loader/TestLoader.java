@@ -1,6 +1,6 @@
 package com.bin.Loader;
 
-import com.bin.rule.core.loader.Loader;
+import com.bin.rule.core.loader.impl.AbstractLoader;
 
 /**
  * loader扩展测试
@@ -8,7 +8,7 @@ import com.bin.rule.core.loader.Loader;
  * @author bin
  * @version 1.0 2018/4/26
  **/
-public class TestLoader implements Loader {
+public class TestLoader extends AbstractLoader {
     @Override
     public String load(String name) {
         return "package rules;" +
@@ -25,4 +25,5 @@ public class TestLoader implements Loader {
     public String getName() {
         return "test";
     }
+    
 }

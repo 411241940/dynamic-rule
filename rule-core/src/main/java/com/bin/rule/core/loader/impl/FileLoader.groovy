@@ -1,16 +1,15 @@
 package com.bin.rule.core.loader.impl
 
-import com.bin.rule.core.loader.Loader
-
 /**
  * 文件代码加载器
  * @author bin
  * @version 1.0 2018/4/25
  * */
-class FileLoader implements Loader {
+class FileLoader extends AbstractLoader {
 
     private static final String BASE_DIR = "rules/"
 
+    @Override
     String load(String name) {
         if (name == null || name.trim().length() == 0) {
             return null

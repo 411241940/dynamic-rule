@@ -1,5 +1,6 @@
 package com.bin;
 
+import com.bin.rule.core.entity.Rule;
 import com.bin.rule.core.invoker.Invoker;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -20,6 +21,38 @@ public class WebApplication extends SpringBootServletInitializer {
     @RequestMapping("/")
     Object hello() {
         return Invoker.invoke("HelloHandler");
+    }
+
+    @RequestMapping("/add")
+    Object add() {
+        Rule rule = new Rule();
+        rule.setName("test");
+        String code = "package rules;" +
+                "import com.bin.rule.core.handler.Handler;" +
+                "public class TestHandler implements Handler {" +
+                "public Object handle(Map<String, Object> params) {" +
+                "return 'test';" +
+                "}" +
+                "}" +
+                ";";
+        rule.setCode(code);
+        return Invoker.add(rule);
+    }
+
+    @RequestMapping("/update")
+    Object update() {
+        Rule rule = new Rule();
+        rule.setName("test");
+        String code = "package rules;" +
+                "import com.bin.rule.core.handler.Handler;" +
+                "public class TestHandler implements Handler {" +
+                "public Object handle(Map<String, Object> params) {" +
+                "return 'test123';" +
+                "}" +
+                "}" +
+                ";";
+        rule.setCode(code);
+        return Invoker.update(rule);
     }
 
     public static void main(String[] args) {

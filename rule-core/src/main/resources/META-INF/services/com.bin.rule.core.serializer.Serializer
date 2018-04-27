@@ -1,0 +1,2 @@
+com.bin.rule.core.serializer.impl.KryoSerializer
+com.bin.rule.core.serializer.impl.JavaSerializer

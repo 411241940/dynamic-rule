@@ -65,11 +65,11 @@ class HandlerFactory {
     private Handler createHandler(String name) {
         String code = loader.load(name)
 
-        if (code != null && code.trim().length() > 0) {
+        if (code) {
             Class<?> clazz = groovyClassLoader.parseClass(code)
-            if (clazz != null) {
+            if (clazz) {
                 def handler = clazz.newInstance()
-                if (handler != null && handler instanceof Handler) {
+                if (handler && handler instanceof Handler) {
                     populateHandler(handler)
                     return handler
                 }
@@ -96,7 +96,7 @@ class HandlerFactory {
             }
 
             Object fieldBean = null
-            if (AnnotationUtils.getAnnotation(field, Resource.class) != null) {
+            if (AnnotationUtils.getAnnotation(field, Resource.class)) {
                 Resource resource = AnnotationUtils.getAnnotation(field, Resource.class)
                 if (resource.name() != null && resource.name().length() > 0) {
                     fieldBean = SpringBeanUtil.getApplicationContext().getBean(resource.name())
@@ -106,7 +106,7 @@ class HandlerFactory {
                 if (!fieldBean) {
                     fieldBean = SpringBeanUtil.getApplicationContext().getBean(field.getType())
                 }
-            } else if (AnnotationUtils.getAnnotation(field, Autowired.class) != null) {
+            } else if (AnnotationUtils.getAnnotation(field, Autowired.class)) {
                 Qualifier qualifier = AnnotationUtils.getAnnotation(field, Qualifier.class)
                 if (qualifier != null && qualifier.value() != null && qualifier.value().length() > 0) {
                     fieldBean = SpringBeanUtil.getApplicationContext().getBean(qualifier.value())
@@ -122,23 +122,19 @@ class HandlerFactory {
         }
     }
 
-//    /**
-//     * 调用规则方法
-//     * @param name handler名称
-//     * @return 调用结果
-//     */
-//    static Object invoke(String name) {
-//        return invoke(name, null)
-//    }
-//
-//    /**
-//     * 调用规则方法
-//     * @param name handler名称
-//     * @param params 参数
-//     * @return 调用结果
-//     */
-//    static Object invoke(String name, Map<String, Object> params) {
-//        return getHandler(name).handle(params)
-//    }
+    /**
+     * 重新加载handler
+     * @param name handler名称
+     */
+    static void reloadHandler(String name) {
+        if (name) {
+            HandlerFactory factory = SpringBeanUtil.getBean(HandlerFactory.class) as HandlerFactory
+            Handler handler = factory.createHandler(name)
+            if (!handler) {
+                throw new IllegalStateException("reload handler error, handler(name: ${name}) is null")
+            }
+            HANDLER_INSTANCES.put(name, handler)
+        }
+    }
 
 }

@@ -15,15 +15,22 @@
     规则执行接口，提供一个handle方法实现业务逻辑
 - Loader
 
-    代码加载接口，提供load方法加载规则的代码
+    - 代码加载器，提供load方法加载规则的代码，add方法新增规则，update方法更新规则。
     
-    通过spi实现动态扩展
+    - 可选择的加载器有：db、redis、file
+    
+    - 通过spi实现动态扩展
 - HandlerFactory
 
     创建规则实例，依赖注入
 - Invoker
     
-    规则调用
+    暴露规则操作的方法
 
+- Serializer
+
+    序列化工具，通过spi实现动态扩展
 ### springboot-example
 基于springboot搭建的一个使用样例
+
+通过`Config`配置`RuleBootstrap`启动类，设置对应配置。db模式需`setDbConfig()`，redis模式需`setRedisConfig()`
