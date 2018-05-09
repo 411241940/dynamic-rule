@@ -18,6 +18,7 @@
     <modules>
         <module>rule-core</module>
         <module>springboot-example</module>
+        <module>rule-starter</module>
     </modules>
 
     <properties>

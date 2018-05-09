@@ -30,7 +30,16 @@
 - Serializer
 
     序列化工具，通过spi实现动态扩展
+
+### rule-starter
+自定义spring-boot-starter，项目只需依赖starter即可快速启动使用
+```
+<dependency>
+    <groupId>com.bin</groupId>
+    <artifactId>spring-boot-starter-dynamic-rule</artifactId>
+    <version>1.0</version>
+</dependency>
+```
+
 ### springboot-example
 基于springboot搭建的一个使用样例
-
-通过`Config`配置`RuleBootstrap`启动类，设置对应配置。db模式需`setDbConfig()`，redis模式需`setRedisConfig()`

@@ -29,8 +29,8 @@
 
         <dependency>
             <groupId>com.bin</groupId>
-            <artifactId>rule-core</artifactId>
-            <version>1.0</version>
+            <artifactId>spring-boot-starter-dynamic-rule</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
