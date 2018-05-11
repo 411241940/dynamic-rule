@@ -6,6 +6,7 @@ import com.bin.rule.core.broadcast.Broadcaster;
 import com.bin.rule.core.broadcast.BroadcasterEnum;
 import com.bin.rule.core.config.RuleConfig;
 import com.bin.rule.core.serializer.SerializerFactory;
+import com.bin.rule.core.util.SpringBeanUtil;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.data.Stat;
@@ -86,7 +87,8 @@ public class ZkBroadcaster extends ZkClient implements Broadcaster {
     public void consume(byte[] data) {
         try {
             BroadcastMessage message = SerializerFactory.getSerializer().deSerialize(data, BroadcastMessage.class);
-            HandlerFactory.reloadHandler(message.getRuleName());
+            HandlerFactory factory = (HandlerFactory) SpringBeanUtil.getBean(HandlerFactory.class);
+            factory.reloadHandler(message.getRuleName());
         } catch (Exception e) {
             e.printStackTrace();
         }

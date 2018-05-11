@@ -26,7 +26,6 @@ class FileLoader extends AbstractLoader {
             code << it
             code << "\n"
         }
-        println code
         return code
     }
 

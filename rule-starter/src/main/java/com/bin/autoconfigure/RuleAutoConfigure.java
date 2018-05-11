@@ -49,7 +49,7 @@ public class RuleAutoConfigure {
             ruleBootstrap.setDbConfig(dbConfig);
         }
 
-        if (BroadcasterEnum.ZK.getBroadcaster().equals(ruleProperties.getLoader())) {
+        if (BroadcasterEnum.ZK.getBroadcaster().equals(ruleProperties.getBroadcaster())) {
             ZkConfig zkConfig = new ZkConfig();
             zkConfig.setZkServer(ruleProperties.getZkServer());
             ruleBootstrap.setZkConfig(zkConfig);

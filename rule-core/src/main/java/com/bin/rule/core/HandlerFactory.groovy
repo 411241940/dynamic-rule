@@ -12,6 +12,8 @@ import javax.annotation.Resource
 import java.lang.reflect.Field
 import java.lang.reflect.Modifier
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.Executor
+import java.util.concurrent.Executors
 
 /**
  * handler获取工厂
@@ -23,6 +25,8 @@ class HandlerFactory {
     private Loader loader
 
     private GroovyClassLoader groovyClassLoader = new GroovyClassLoader()
+
+    private Executor refreshExecutor = Executors.newFixedThreadPool(3)
 
     /**
      * handler实例缓存
@@ -128,14 +132,15 @@ class HandlerFactory {
      * 重新加载handler
      * @param name handler名称
      */
-    static void reloadHandler(String name) {
+    void reloadHandler(String name) {
         if (name) {
-            HandlerFactory factory = SpringBeanUtil.getBean(HandlerFactory.class) as HandlerFactory
-            Handler handler = factory.createHandler(name)
-            if (!handler) {
-                throw new IllegalStateException("reload handler error, handler(name: ${name}) is null")
-            }
-            HANDLER_INSTANCES.put(name, handler)
+            refreshExecutor.execute({
+                Handler handler = createHandler(name)
+                if (!handler) {
+                    throw new IllegalStateException("reload handler error, handler(name: ${name}) is null")
+                }
+                HANDLER_INSTANCES.put(name, handler)
+            })
         }
     }
 
