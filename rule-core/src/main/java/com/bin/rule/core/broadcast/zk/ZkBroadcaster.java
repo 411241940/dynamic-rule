@@ -9,15 +9,15 @@ import com.bin.rule.core.serializer.SerializerFactory;
 import com.bin.rule.core.util.SpringBeanUtil;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.WatchedEvent;
-import org.apache.zookeeper.data.Stat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * zk广播类
+ *
  * @author bin
  * @version 1.0 2018/5/10
- * */
+ */
 public class ZkBroadcaster extends ZkClient implements Broadcaster {
 
     private static final Logger logger = LoggerFactory.getLogger(ZkBroadcaster.class);
@@ -56,21 +56,33 @@ public class ZkBroadcaster extends ZkClient implements Broadcaster {
 
     @Override
     public void process(WatchedEvent event) {
+
+        // 收到断开连接的消息，这里其实无能为力，因为这时已经和ZK断开连接了，只能等ZK再次开启了
+        if (event.getState().equals(Event.KeeperState.Disconnected)) {
+            logger.warn("zk Disconnected");
+        }
+
+        // ZK已经连接上但是会话丢失了，这时需要重新建立会话。
         if (event.getState() == Event.KeeperState.Expired) {
             super.close();
             super.getClient();
         }
 
-        // node data changed
+        // 认证失败
+        if (event.getState().equals(Event.KeeperState.AuthFailed)) {
+            logger.error("zk AuthFailed");
+        }
+
+        // 节点数据变更
         if (event.getType() == Event.EventType.NodeDataChanged) {
             String path = event.getPath();
+            logger.info("zk node data changed -> {}", path);
 
             try {
                 super.getClient().exists(path, true);
             } catch (Exception e) {
                 logger.error("zk process -> {}", e.getMessage());
             }
-
 
             byte[] resultData = null;
             try {
@@ -79,7 +91,7 @@ public class ZkBroadcaster extends ZkClient implements Broadcaster {
                 logger.error("zk process -> {}", e.getMessage());
             }
 
-            consume(resultData);
+            consume(resultData); // 消费
         }
     }
 
@@ -99,19 +111,5 @@ public class ZkBroadcaster extends ZkClient implements Broadcaster {
         return BroadcasterEnum.ZK.getBroadcaster();
     }
 
-    private boolean watchTopic(String path) {
-        try {
-            Stat stat = super.getClient().exists(path, true);
-            if (stat == null) {
-                super.existsOrCreate(path);
-                stat = super.getClient().exists(path, true);
-            }
-            boolean ret = stat != null;
-            logger.info("zk watchTopic -> {}, path:{}", ret, path);
-            return ret;
-        } catch (KeeperException | InterruptedException e) {
-            logger.error(e.getMessage(), e);
-        }
-        return false;
-    }
+
 }

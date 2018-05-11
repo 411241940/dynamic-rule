@@ -4,11 +4,17 @@ import com.bin.rule.core.config.RuleConfig;
 
 /**
  * 广播接口
+ *
  * @author bin
  * @version 1.0 2018/5/10
- * */
+ */
 public interface Broadcaster {
 
+    /**
+     * 初始化方法
+     *
+     * @param ruleConfig 配置类
+     */
     void init(RuleConfig ruleConfig);
 
     /**

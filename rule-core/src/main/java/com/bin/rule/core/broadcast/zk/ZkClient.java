@@ -14,15 +14,16 @@ import java.io.IOException;
 
 /**
  * zk客户端
+ *
  * @author bin
  * @version 1.0 2018/5/10
- * */
+ */
 public abstract class ZkClient implements Watcher {
     private static final Logger logger = LoggerFactory.getLogger(ZkClient.class);
 
     private String zkServer;
 
-    private ZooKeeper zookeeper; // 单例
+    private volatile ZooKeeper zookeeper; // 单例
 
     void setZkServer(String zkServer) {
         this.zkServer = zkServer;
@@ -67,7 +68,7 @@ public abstract class ZkClient implements Watcher {
      *
      * @return zk连接
      */
-    Stat existsOrCreate(String path) throws KeeperException, InterruptedException {
+    private Stat existsOrCreate(String path) throws KeeperException, InterruptedException {
         if (path == null || path.length() < 1) {
             return null;
         }
@@ -82,9 +83,9 @@ public abstract class ZkClient implements Watcher {
                 existsOrCreate(parentPath);
             }
             zookeeper.create(path, new byte[]{}, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+            logger.info("zk create path -> {}", path);
             return null;
         }
-
     }
 
     /**
@@ -103,6 +104,22 @@ public abstract class ZkClient implements Watcher {
             logger.error("setData -> {}", e.getMessage());
         }
         return null;
+    }
+
+    boolean watchTopic(String path) {
+        try {
+            Stat stat = getClient().exists(path, true);
+            if (stat == null) {
+                existsOrCreate(path);
+                stat = getClient().exists(path, true);
+            }
+            boolean ret = stat != null;
+            logger.info("zk watchTopic -> {}, path:{}", ret, path);
+            return ret;
+        } catch (KeeperException | InterruptedException e) {
+            logger.error(e.getMessage(), e);
+        }
+        return false;
     }
 
     @Override
