@@ -18,6 +18,11 @@ class RuleConfig {
     String serializer = "kryo"
 
     /**
+     * 广播方式选择
+     */
+    String broadcaster = "zk"
+
+    /**
      * db配置
      */
     DbConfig dbConfig
@@ -26,4 +31,9 @@ class RuleConfig {
      * redis配置
      */
     RedisConfig redisConfig
+
+    /**
+     * zk配置
+     */
+    ZkConfig zkConfig
 }

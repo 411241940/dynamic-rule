@@ -1,9 +1,9 @@
 package com.bin.rule.core.loader.impl
 
-import com.bin.rule.core.HandlerFactory
 import com.bin.rule.core.config.RedisConfig
 import com.bin.rule.core.config.RuleConfig
 import com.bin.rule.core.entity.Rule
+import com.bin.rule.core.serializer.SerializerFactory
 import redis.clients.jedis.JedisPool
 import redis.clients.jedis.JedisPoolConfig
 
@@ -19,7 +19,7 @@ class RedisLoader extends AbstractLoader {
 
     @Override
     String load(String name) {
-        return serializer.deSerialize(jedisPool.getResource().get(name.getBytes()), String.class)
+        return SerializerFactory.serializer.deSerialize(jedisPool.getResource().get(name.getBytes()), String.class)
     }
 
     @Override
@@ -63,16 +63,15 @@ class RedisLoader extends AbstractLoader {
 
     @Override
     boolean add(Rule rule) {
-        final byte[] serialize = serializer.serialize(rule.code)
+        final byte[] serialize = SerializerFactory.serializer.serialize(rule.code)
         jedisPool.getResource().set(rule.name.getBytes(), serialize)
         return true
     }
 
     @Override
-    boolean update(Rule rule) {
-        final byte[] serialize = serializer.serialize(rule.code)
+    boolean updateCode(Rule rule) {
+        final byte[] serialize = SerializerFactory.serializer.serialize(rule.code)
         jedisPool.getResource().set(rule.name.getBytes(), serialize)
-        HandlerFactory.reloadHandler(rule.name)
         return true
     }
 }

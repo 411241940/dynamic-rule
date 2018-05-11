@@ -33,14 +33,5 @@ public enum SerializeEnum {
         return serialize;
     }
 
-    /**
-     * Sets serialize protocol.
-     *
-     * @param serialize the serialize protocol
-     */
-    public void setSerialize(String serialize) {
-        this.serialize = serialize;
-    }
-
 
 }

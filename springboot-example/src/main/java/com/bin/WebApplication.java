@@ -18,6 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 @EnableScheduling
 public class WebApplication extends SpringBootServletInitializer {
 
+    public static void main(String[] args) {
+        SpringApplication.run(WebApplication.class, args);
+    }
+
     @RequestMapping("/")
     Object hello() {
         return Invoker.invoke("HelloHandler");
@@ -42,7 +46,7 @@ public class WebApplication extends SpringBootServletInitializer {
     @RequestMapping("/update")
     Object update() {
         Rule rule = new Rule();
-        rule.setName("test");
+        rule.setName("HelloHandler");
         String code = "package rules;" +
                 "import com.bin.rule.core.handler.Handler;" +
                 "public class TestHandler implements Handler {" +
@@ -55,7 +59,4 @@ public class WebApplication extends SpringBootServletInitializer {
         return Invoker.update(rule);
     }
 
-    public static void main(String[] args) {
-        SpringApplication.run(WebApplication.class, args);
-    }
 }

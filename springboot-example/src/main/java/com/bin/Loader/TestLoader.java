@@ -1,5 +1,6 @@
 package com.bin.Loader;
 
+import com.bin.rule.core.entity.Rule;
 import com.bin.rule.core.loader.impl.AbstractLoader;
 
 /**
@@ -25,5 +26,10 @@ public class TestLoader extends AbstractLoader {
     public String getName() {
         return "test";
     }
-    
+
+    @Override
+    public boolean updateCode(Rule rule) {
+        return false;
+    }
+
 }

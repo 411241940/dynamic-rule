@@ -1,5 +1,7 @@
 package com.bin.rule.core.loader.impl
 
+import com.bin.rule.core.entity.Rule
+
 /**
  * 文件代码加载器
  * @author bin
@@ -24,11 +26,17 @@ class FileLoader extends AbstractLoader {
             code << it
             code << "\n"
         }
+        println code
         return code
     }
 
     @Override
     String getName() {
         return LOADER_NAME.file
+    }
+
+    @Override
+    boolean updateCode(Rule rule) {
+        return true
     }
 }

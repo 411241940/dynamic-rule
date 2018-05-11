@@ -24,6 +24,9 @@ public class RuleProperties {
     private String dbUsername;
     private String dbPassword;
 
+    private String broadcaster = "zk";
+    private String zkServer;
+
     public String getLoader() {
         return loader;
     }
@@ -94,5 +97,21 @@ public class RuleProperties {
 
     public void setDbPassword(String dbPassword) {
         this.dbPassword = dbPassword;
+    }
+
+    public String getBroadcaster() {
+        return broadcaster;
+    }
+
+    public void setBroadcaster(String broadcaster) {
+        this.broadcaster = broadcaster;
+    }
+
+    public String getZkServer() {
+        return zkServer;
+    }
+
+    public void setZkServer(String zkServer) {
+        this.zkServer = zkServer;
     }
 }

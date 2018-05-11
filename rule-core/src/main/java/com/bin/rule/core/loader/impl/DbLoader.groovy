@@ -1,10 +1,10 @@
 package com.bin.rule.core.loader.impl
 
 import com.alibaba.druid.pool.DruidDataSource
-import com.bin.rule.core.HandlerFactory
 import com.bin.rule.core.config.DbConfig
 import com.bin.rule.core.config.RuleConfig
 import com.bin.rule.core.entity.Rule
+import com.bin.rule.core.serializer.SerializerFactory
 import com.bin.rule.core.util.SqlUtil
 import groovy.sql.GroovyRowResult
 import groovy.sql.Sql
@@ -31,7 +31,7 @@ class DbLoader extends AbstractLoader {
         Sql sql = new Sql(dataSource)
         GroovyRowResult result = sql.firstRow(selectSql)
         byte[] bytes = result.code
-        return serializer.deSerialize(bytes, String.class)
+        return SerializerFactory.serializer.deSerialize(bytes, String.class)
     }
 
     @Override
@@ -64,7 +64,7 @@ class DbLoader extends AbstractLoader {
     boolean add(Rule rule) {
         String sql = "insert into ${tableName} (id,name,code) values (?,?,?)"
         try {
-            final byte[] serialize = serializer.serialize(rule.code)
+            final byte[] serialize = SerializerFactory.serializer.serialize(rule.code)
             executeInsert(sql, createUUID(), rule.name, serialize)
             return true
         } catch (Exception e) {
@@ -73,12 +73,11 @@ class DbLoader extends AbstractLoader {
         }
     }
 
-    boolean update(Rule rule) {
+    boolean updateCode(Rule rule) {
         String sql = "update ${tableName} set code = ? where name = ?"
         try {
-            final byte[] serialize = serializer.serialize(rule.code)
+            final byte[] serialize = SerializerFactory.serializer.serialize(rule.code)
             int i = executeUpdate(sql, serialize, rule.name)
-            HandlerFactory.reloadHandler(rule.name)
             return i > 0
         } catch (Exception e) {
             e.printStackTrace()
@@ -96,7 +95,7 @@ class DbLoader extends AbstractLoader {
             sql.execute(sqlStr)
             return 1
         } catch (Exception e) {
-            logger.error("executeQuery-> " + e.getMessage())
+            logger.error("executeQuery -> {}", e.getMessage())
         }
         return 0
     }

@@ -26,6 +26,7 @@
         <spring.version>4.3.9.RELEASE</spring.version>
         <druid.version>1.0.29</druid.version>
         <kryo.version>4.0.0</kryo.version>
+        <zookeeper.version>3.4.12</zookeeper.version>
     </properties>
 
     <dependencyManagement>
@@ -64,6 +65,12 @@
                 <groupId>com.esotericsoftware</groupId>
                 <artifactId>kryo-shaded</artifactId>
                 <version>${kryo.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.zookeeper</groupId>
+                <artifactId>zookeeper</artifactId>
+                <version>${zookeeper.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

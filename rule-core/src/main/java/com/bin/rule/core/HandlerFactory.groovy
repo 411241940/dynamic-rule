@@ -1,5 +1,6 @@
 package com.bin.rule.core
 
+import com.bin.rule.core.broadcast.BroadcasterFactory
 import com.bin.rule.core.handler.Handler
 import com.bin.rule.core.loader.Loader
 import com.bin.rule.core.util.SpringBeanUtil
@@ -51,6 +52,7 @@ class HandlerFactory {
             if (!handler) {
                 throw new IllegalStateException("load handler error, handler(name: ${name}) is null")
             }
+            BroadcasterFactory.broadcaster.watch(name)
             HANDLER_INSTANCES.put(name, handler)
         }
 

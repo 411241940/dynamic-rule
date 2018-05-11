@@ -2,7 +2,7 @@
 - 通过java与groovy整合，实现动态规则调用
 
 ## Quick Start
-1. 直接运行springboot-example中的`WebApplication.mail()`
+1. 直接运行springboot-example中的`WebApplication.main()`
 2. 访问http://127.0.0.1:8080
 
 ## 模块介绍
@@ -10,6 +10,12 @@
 - bootstrap
 
     初始化
+- broadcast
+
+    - 广播模块，当规则修改后，通知到每个监听服务进行规则刷新
+    - 目前使用zookeeper Watcher机制
+    - 可通过spi实现动态扩展
+
 - Handler
 
     规则执行接口，提供一个handle方法实现业务逻辑

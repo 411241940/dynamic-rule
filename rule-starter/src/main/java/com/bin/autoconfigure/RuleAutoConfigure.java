@@ -1,8 +1,10 @@
 package com.bin.autoconfigure;
 
 import com.bin.rule.core.bootstrap.RuleBootstrap;
+import com.bin.rule.core.broadcast.BroadcasterEnum;
 import com.bin.rule.core.config.DbConfig;
 import com.bin.rule.core.config.RedisConfig;
+import com.bin.rule.core.config.ZkConfig;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -45,6 +47,12 @@ public class RuleAutoConfigure {
             dbConfig.setUsername(ruleProperties.getDbUsername());
             dbConfig.setPassword(ruleProperties.getDbPassword());
             ruleBootstrap.setDbConfig(dbConfig);
+        }
+
+        if (BroadcasterEnum.ZK.getBroadcaster().equals(ruleProperties.getLoader())) {
+            ZkConfig zkConfig = new ZkConfig();
+            zkConfig.setZkServer(ruleProperties.getZkServer());
+            ruleBootstrap.setZkConfig(zkConfig);
         }
 
         return ruleBootstrap;

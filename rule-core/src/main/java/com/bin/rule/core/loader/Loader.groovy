@@ -2,7 +2,6 @@ package com.bin.rule.core.loader
 
 import com.bin.rule.core.config.RuleConfig
 import com.bin.rule.core.entity.Rule
-import com.bin.rule.core.serializer.Serializer
 
 /**
  * 代码加载器
@@ -39,13 +38,6 @@ interface Loader {
      * @param ruleConfig 配置
      */
     void init(RuleConfig ruleConfig)
-
-    /**
-     * 设置序列化
-     *
-     * @param serializer 序列化实现
-     */
-    void setSerializer(Serializer serializer)
 
     /**
      * 保存规则
