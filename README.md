@@ -9,7 +9,9 @@
 ### rule-core
 - bootstrap
 
-    初始化
+    - 初始化
+    
+    - 根据配置，选择加载的SPI实现类
     
 - broadcast
 
@@ -61,6 +63,49 @@
     <artifactId>spring-boot-starter-dynamic-rule</artifactId>
     <version>1.0</version>
 </dependency>
+```
+
+#### 支持的 Spring Boot 配置
+```java
+@ConfigurationProperties(prefix = "rule")
+public class RuleProperties {
+
+    // 选择使用的 loader ,默认为 FileLoader
+    private String loader = "file";
+
+    // 选择使用的 serializer ,默认为 KryoSerializer
+    private String serializer = "kryo";
+
+    // redis 相关配置
+    private String redisHost;
+    private int redisPort;
+    private String redisPassword;
+
+    // db 相关配置
+    private String dbUrl;
+    private String dbDriverClassName;
+    private String dbUsername;
+    private String dbPassword;
+
+    // 选择使用的 broadcaster ,默认为 ZkBroadcaster
+    private String broadcaster = "zk";
+
+     // zk 配置
+    private String zkServer;
+	
+}
+```
+
+#### 配置示例
+`application.properties`
+```properties
+rule.loader=redis
+rule.serializer=kryo
+
+rule.zkServer=127.0.0.1:2181
+
+rule.redisHost=127.0.0.1
+rule.redisPort=6379
 ```
 
 ### springboot-example

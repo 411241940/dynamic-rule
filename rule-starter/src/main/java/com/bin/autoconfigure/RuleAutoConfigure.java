@@ -19,7 +19,7 @@ import javax.annotation.Resource;
  * @version 1.0 2018/5/9
  */
 @Configuration
-@EnableConfigurationProperties(RuleProperties.class) //开启使用映射实体对象
+@EnableConfigurationProperties(RuleProperties.class) // 开启使用映射实体对象
 public class RuleAutoConfigure {
 
     @Resource

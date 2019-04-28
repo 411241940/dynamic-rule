@@ -11,20 +11,27 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "rule")
 public class RuleProperties {
 
+    // 选择使用的 Loader ,默认为 FileLoader
     private String loader = "file";
 
+    // 选择使用的 Serializer ,默认为 KryoSerializer
     private String serializer = "kryo";
 
+    // redis 相关配置
     private String redisHost;
     private int redisPort;
     private String redisPassword;
 
+    // db 相关配置
     private String dbUrl;
     private String dbDriverClassName;
     private String dbUsername;
     private String dbPassword;
 
+    // 选择使用的 Broadcaster ,默认为 ZkBroadcaster
     private String broadcaster = "zk";
+
+     // zk 配置
     private String zkServer;
 
     public String getLoader() {
