@@ -10,32 +10,48 @@
 - bootstrap
 
     初始化
+    
 - broadcast
 
+![](https://raw.githubusercontent.com/411241940/dynamic-rule/master/images/Broadcaster类图.png)
+
     - 广播模块，当规则修改后，通知到每个监听服务进行规则刷新
+    
     - 目前使用zookeeper Watcher机制
+    
     - 可通过spi实现动态扩展
 
 - Handler
 
     规则执行接口，提供一个handle方法实现业务逻辑
+    
 - Loader
+
+![](https://raw.githubusercontent.com/411241940/dynamic-rule/master/images/Loader类图.png)
 
     - 代码加载器，提供load方法加载规则的代码，add方法新增规则，update方法更新规则。
     
-    - 可选择的加载器有：db、redis、file
+    - 已支持的加载器有：db、redis、file
     
-    - 通过spi实现动态扩展
+    - 可通过spi实现动态扩展
+    
 - HandlerFactory
 
     创建规则实例，依赖注入
+
 - Invoker
     
     暴露规则操作的方法
 
 - Serializer
 
-    序列化工具，通过spi实现动态扩展
+![](https://raw.githubusercontent.com/411241940/dynamic-rule/master/images/Serializer类图.png)
+
+    - 序列化工具
+    
+    - 已支持的序列化工具有：JavaSerializer、KryoSerializer
+    
+    - 可通过spi实现动态扩展
 
 ### rule-starter
 自定义spring-boot-starter，项目只需依赖starter即可快速启动使用
@@ -51,5 +67,12 @@
 基于springboot搭建的一个使用样例
 
 ## 流程
+
 ### 调用规则时序
-![](https://github.com/411241940/dynamic-rule/raw/images/调用规则时序.jpg)
+![](https://raw.githubusercontent.com/411241940/dynamic-rule/master/images/调用规则时序.jpg)
+
+### 添加规则时序
+![](https://raw.githubusercontent.com/411241940/dynamic-rule/master/images/添加规则时序.jpg)
+
+### 更新规则时序
+![](https://raw.githubusercontent.com/411241940/dynamic-rule/master/images/更新规则时序.jpg)
