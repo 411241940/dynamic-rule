@@ -1,6 +1,5 @@
 package com.bin;
 
-import com.bin.rule.core.entity.Rule;
 import com.bin.rule.core.invoker.Invoker;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -9,7 +8,11 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @EnableAutoConfiguration
 @ComponentScan
@@ -27,36 +30,37 @@ public class WebApplication extends SpringBootServletInitializer {
         return Invoker.invoke("HelloHandler");
     }
 
+    @RequestMapping("/compare")
+    Object compare(@RequestParam Integer score) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("score", score);
+        return Invoker.invoke("CompareHandler", params);
+    }
+
     @RequestMapping("/add")
     Object add() {
-        Rule rule = new Rule();
-        rule.setName("test");
         String code = "package rules;" +
                 "import com.bin.rule.core.handler.Handler;" +
-                "public class TestHandler implements Handler {" +
+                "public class CompareHandler implements Handler {" +
                 "public Object handle(Map<String, Object> params) {" +
-                "return 'test';" +
+                "return params.get(\"score\") < 10;" +
                 "}" +
                 "}" +
                 ";";
-        rule.setCode(code);
-        return Invoker.add(rule);
+        return Invoker.add("CompareHandler", code);
     }
 
     @RequestMapping("/update")
     Object update() {
-        Rule rule = new Rule();
-        rule.setName("HelloHandler");
         String code = "package rules;" +
                 "import com.bin.rule.core.handler.Handler;" +
-                "public class TestHandler implements Handler {" +
+                "public class CompareHandler implements Handler {" +
                 "public Object handle(Map<String, Object> params) {" +
-                "return 'test123';" +
+                "return params.get(\"score\") < 15;" +
                 "}" +
                 "}" +
                 ";";
-        rule.setCode(code);
-        return Invoker.update(rule);
+        return Invoker.update("CompareHandler", code);
     }
 
 }

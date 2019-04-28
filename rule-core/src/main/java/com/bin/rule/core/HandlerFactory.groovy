@@ -4,6 +4,8 @@ import com.bin.rule.core.broadcast.BroadcasterFactory
 import com.bin.rule.core.handler.Handler
 import com.bin.rule.core.loader.Loader
 import com.bin.rule.core.util.SpringBeanUtil
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.core.annotation.AnnotationUtils
@@ -22,6 +24,8 @@ import java.util.concurrent.Executors
  * */
 class HandlerFactory {
 
+    private Logger LOGGER = LoggerFactory.getLogger(HandlerFactory.class)
+
     private Loader loader
 
     private GroovyClassLoader groovyClassLoader = new GroovyClassLoader()
@@ -32,6 +36,11 @@ class HandlerFactory {
      * handler实例缓存
      */
     private static final ConcurrentHashMap<String, Handler> HANDLER_INSTANCES = new ConcurrentHashMap<>()
+
+    /**
+     * 循环依赖缓存
+     */
+    private final Map<String, Handler> EARLY_HANDLER_INSTANCES = new ConcurrentHashMap<>()
 
     HandlerFactory() {
     }
@@ -50,15 +59,44 @@ class HandlerFactory {
             return null
         }
 
+        // 先从缓存获取
         Handler handler = HANDLER_INSTANCES.get(name)
-        if (!handler) {
-            handler = createHandler(name)
-            if (!handler) {
-                throw new IllegalStateException("load handler error, handler(name: ${name}) is null")
-            }
-            BroadcasterFactory.broadcaster.watch(name)
-            HANDLER_INSTANCES.put(name, handler)
+        if (handler != null) {
+            return handler
         }
+
+        // handler是否创建中，解决循环依赖
+        Handler earlyBean = EARLY_HANDLER_INSTANCES.get(name)
+        if (earlyBean != null) {
+            return earlyBean
+        }
+
+        synchronized (HandlerFactory.class) {
+            handler = HANDLER_INSTANCES.get(name)
+            if (handler != null) {
+                return handler
+            }
+            handler = createHandler(name)
+        }
+
+        if (handler == null) {
+            throw new IllegalStateException("load handler error, handler(name: ${name}) is null")
+        }
+
+        // 循环依赖缓存
+        EARLY_HANDLER_INSTANCES.put(name, handler)
+
+        // 依赖注入
+        populateHandler(handler)
+
+        // 缓存 handler 实例
+        HANDLER_INSTANCES.put(name, handler)
+
+        // 清除循环依赖缓存
+        EARLY_HANDLER_INSTANCES.remove(name)
+
+        // 监听广播
+        BroadcasterFactory.broadcaster.watch(name)
 
         return handler
     }
@@ -76,7 +114,6 @@ class HandlerFactory {
             if (clazz) {
                 def handler = clazz.newInstance()
                 if (handler && handler instanceof Handler) {
-                    populateHandler(handler)
                     return handler
                 }
             }
@@ -119,6 +156,10 @@ class HandlerFactory {
                 } else {
                     fieldBean = SpringBeanUtil.getApplicationContext().getBean(field.getType())
                 }
+            } else if (Handler.isAssignableFrom(field.getType())) {
+                HandlerFactory factory = SpringBeanUtil.getBean(HandlerFactory.class) as HandlerFactory
+                String handlerName = field.getName().substring(0, 1).toUpperCase() + field.getName().substring(1)
+                fieldBean = factory.getHandler(handlerName)
             }
 
             if (fieldBean) {

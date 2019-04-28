@@ -34,8 +34,8 @@ abstract class AbstractLoader implements Loader {
 
     @Override
     boolean update(Rule rule) {
-        BroadcasterFactory.broadcaster.produce(rule.name, System.currentTimeMillis())
         updateCode(rule)
+        BroadcasterFactory.broadcaster.produce(rule.name, System.currentTimeMillis())
         return true
     }
 

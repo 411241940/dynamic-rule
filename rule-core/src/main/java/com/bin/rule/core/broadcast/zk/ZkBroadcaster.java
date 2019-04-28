@@ -101,6 +101,7 @@ public class ZkBroadcaster extends ZkClient implements Broadcaster {
             BroadcastMessage message = SerializerFactory.getSerializer().deSerialize(data, BroadcastMessage.class);
             HandlerFactory factory = (HandlerFactory) SpringBeanUtil.getBean(HandlerFactory.class);
             factory.reloadHandler(message.getRuleName());
+            logger.debug("规则重新加载,name={}", message.getRuleName());
         } catch (Exception e) {
             e.printStackTrace();
         }

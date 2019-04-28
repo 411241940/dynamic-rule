@@ -49,3 +49,7 @@
 
 ### springboot-example
 基于springboot搭建的一个使用样例
+
+## 流程
+### 调用规则时序
+![](https://github.com/411241940/dynamic-rule/raw/images/调用规则时序.jpg)
